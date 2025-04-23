@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Sales Report - Inventory Management System{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <h2>Sales Report</h2>
+    </div>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Product ID</th>
+                <th>Quantity</th>
+                <th>Total Price</th>
+                <th>Sold By</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for sale in sales %}
+            <tr>
+                <td>{{ sale.date.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                <td>{{ sale.product_id }}</td>
+                <td>{{ sale.quantity }}</td>
+                <td>${{ "%.2f"|format(sale.total_price) }}</td>
+                <td>{{ sale.user_id }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% if not sales %}
+<div class="alert alert-info">
+    No sales records available.
+</div>
+{% endif %}
+{% endblock %}

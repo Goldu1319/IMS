@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block title %}Bill - Inventory Management System{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">Sales Bill</h4>
+                    <button onclick="window.print()" class="btn btn-primary btn-sm">Print Bill</button>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <h3>Inventory Management System</h3>
+                        <p class="mb-0">Sales Receipt</p>
+                        <p class="text-muted small">Date: {{ sale.date.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-sm-6">
+                            <p class="mb-0"><strong>Bill No:</strong> #{{ sale.id }}</p>
+                            <p class="mb-0"><strong>Sold By:</strong> {{ seller.username }}</p>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive mb-4">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Unit Price</th>
+                                    <th>Quantity</th>
+                                    <th>Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>{{ product.name }}</td>
+                                    <td>${{ "%.2f"|format(product.price) }}</td>
+                                    <td>{{ sale.quantity }}</td>
+                                    <td>${{ "%.2f"|format(sale.quantity * product.price) }}</td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="3" class="text-end"><strong>Subtotal:</strong></td>
+                                    <td>${{ "%.2f"|format(sale.quantity * product.price) }}</td>
+                                </tr>
+                                {% if product.discount %}
+                                <tr>
+                                    <td colspan="3" class="text-end"><strong>Discount ({{ "%.1f"|format(product.discount) }}%):</strong></td>
+                                    <td>${{ "%.2f"|format((sale.quantity * product.price * product.discount / 100)) }}</td>
+                                </tr>
+                                {% endif %}
+                                <tr>
+                                    <td colspan="3" class="text-end"><strong>Total:</strong></td>
+                                    <td><strong>${{ "%.2f"|format(sale.total_price) }}</strong></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+
+                    <div class="text-center">
+                        <p class="mb-0">Thank you for your business!</p>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-3">
+                <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+@media print {
+    .btn, .navbar {
+        display: none !important;
+    }
+    .card {
+        border: none !important;
+    }
+    .card-header {
+        background: none !important;
+        border: none !important;
+    }
+}
+</style>
+{% endblock %}
